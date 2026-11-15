@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ares-X | Explorador de análogos marcianos</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #100d0c;
+    color: white;
+}
+
+.brand-logo {
+    width: 104px;
+    height: 104px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffad80;
+    box-shadow: 0 0 28px #ff704366;
+    margin: 0 auto 18px;
+}
+
+header {
+    min-height: 390px;
+    padding: 90px 20px;
+    text-align: center;
+    background:
+    linear-gradient(#130b08a8, #130b08e8),
+    url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1800")
+    center/cover;
+}
+
+header h1 {
+    font-size: clamp(35px, 6vw, 65px);
+    color: #ff7043;
+    margin-bottom: 20px;
+}
+
+header p {
+    font-size: 19px;
+    color: #eee;
+}
+
+header .tag {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    border: 1px solid #ff7043;
+    border-radius: 30px;
+    color: #ff9a70;
+}
+
+.controls {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+input, select {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #66372b;
+    background: #241a17;
+    color: white;
+    font-size: 15px;
+}
+
+h2.section-title {
+    text-align: center;
+    margin: 45px 15px 10px;
+    font-size: 30px;
+    color: #ff7043;
+}
+
+.subtitle {
+    text-align: center;
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.gallery {
+    max-width: 1450px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: #211815;
+    border: 1px solid #493027;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: .3s;
+}
+
+.card:hover {
+    transform: translateY(-7px);
+    border-color: #ff7043;
+    box-shadow: 0 10px 30px #0008;
+}
+
+.card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    background: #38251e;
+}
+
+.card-content {
+    padding: 18px;
+}
+
+.number {
+    color: #ff7043;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.card h3 {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.country {
+    color: #ffad80;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.card p {
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+button {
+    margin-top: 15px;
+    padding: 11px 18px;
+    background: #c64e2b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #ff7043;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    background: #000d;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #211815;
+    max-width: 650px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.modal-content img {
+    width: 100%;
+    max-height: 330px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.analog-box {
+    margin-top: 16px;
+    padding: 14px;
+    border-left: 3px solid #ff7043;
+    background: #2a1b16;
+    border-radius: 8px;
+}
+
+.analog-box h3 {
+    color: #ffad80;
+    font-size: 16px;
+    margin-bottom: 7px;
+}
+
+.analog-box p {
+    color: #ddd;
+    line-height: 1.65;
+}
+
+.embedded-map {
+    width: 100%;
+    height: 260px;
+    border: 0;
+    border-radius: 10px;
+    margin-top: 18px;
+}
+
+.close {
+    float: right;
+    font-size: 25px;
+    cursor: pointer;
+    color: #ff7043;
+}
+
+.about {
+    background: #211815;
+    padding: 55px 25px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.about p {
+    max-width: 850px;
+    margin: 20px auto;
+    color: #ccc;
+    line-height: 1.8;
+}
+
+footer {
+    padding: 25px;
+    text-align: center;
+    color: #999;
+    background: #090706;
+}
+
+.empty {
+    text-align: center;
+    grid-column: 1 / -1;
+    color: #ffad80;
+    padding: 40px;
+}
+
+.add-location {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 28px;
+    background: #211815;
+    border: 1px solid #66372b;
+    border-radius: 15px;
+}
+
+.add-location h2 { color: #ff7043; margin-bottom: 8px; }
+.add-location p { color: #bbb; margin-bottom: 20px; }
+.location-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+.location-form label { color: #ffad80; font-size: 14px; }
+.location-form input, .location-form textarea { margin-top: 6px; width: 100%; }
+.location-form .wide { grid-column: 1 / -1; }
+.location-form textarea { min-height: 100px; resize: vertical; }
+.location-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.location-actions button { margin-top: 0; }
+.location-message { min-height: 22px; margin-top: 12px; color: #8ee6a8; }
+@media(max-width:600px) { .location-form { grid-template-columns: 1fr; } .location-form .wide { grid-column: auto; } }
+
+@media(max-width:600px) {
+    header { padding: 75px 15px; }
+    .gallery { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <img class="brand-logo" src="ares-x-logo.jpg" alt="Logo Ares-X">
+    <select id="language-select" aria-label="Idioma" style="display:block;margin:0 auto 16px;padding:8px 12px;border-radius:8px;background:#241a17;color:white;border:1px solid #66372b">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+    </select>
+    <div class="tag">🌎 EXPLORACIÓN ESPACIAL</div>
+    <h1>ARES-X</h1>
+    <p id="hero-description"><span id="hero-destination-count">32</span> lugares increíbles de nuestro planeta que parecen sacados de Marte.</p>
+</header>
+
+<h2 id="explore-title" class="section-title">Explora los <span id="explore-destination-count">32</span> destinos</h2>
+<p id="explore-subtitle" class="subtitle">Descubre los paisajes más sorprendentes de nuestro planeta.</p>
+
+<div class="controls">
+    <input type="text" id="search" placeholder="🔎 Buscar lugar o país...">
+
+    <select id="filter">
+        <option id="filter-all" value="all">Todos los lugares</option>
+        <option id="filter-cr" value="Costa Rica">Solo Costa Rica 🇨🇷</option>
+        <option id="filter-other" value="Otros">Otros países 🌎</option>
+    </select>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<section class="add-location" id="add-location">
+    <h2 id="add-title">Añadir una ubicación análoga a Marte</h2>
+    <p id="add-description">Registra un lugar de la Tierra que pueda servir para estudiar o simular condiciones marcianas.</p>
+    <div class="location-form">
+        <label>Nombre del lugar
+            <input id="new-name" type="text" placeholder="Ejemplo: Campo volcánico">
+        </label>
+        <label>País o región
+            <input id="new-country" type="text" placeholder="Ejemplo: Costa Rica">
+        </label>
+        <label>Latitud
+            <input id="new-lat" type="text" inputmode="decimal" placeholder="Ejemplo: 10.1980">
+        </label>
+        <label>Longitud
+            <input id="new-lng" type="text" inputmode="decimal" placeholder="Ejemplo: -84.2330">
+        </label>
+        <label class="wide">Resumen breve de la ubicación (máximo 3 renglones)
+            <textarea id="new-summary" rows="2" maxlength="220" placeholder="Ejemplo: Un paisaje volcánico de lava y terrenos oscuros que recuerda a otro planeta."></textarea>
+        </label>
+        <label class="wide">¿Por qué se parece o simula una zona de Marte?
+            <textarea id="new-why" placeholder="Describe el clima, suelo, rocas, minerales, cráteres o volcanismo..."></textarea>
+        </label>
+        <label class="wide">¿Para qué pruebas análogas podría funcionar?
+            <textarea id="new-tests" placeholder="Ejemplo: pruebas de rover, trajes espaciales, perforación o búsqueda de vida microbiana..."></textarea>
+        </label>
+        <label class="wide">Imagen de referencia del lugar
+            <input id="new-image-file" type="file" accept="image/*">
+            <small style="display:block;color:#999;margin-top:6px">Puedes adjuntar una fotografía del lugar o una imagen de referencia.</small>
+        </label>
+    </div>
+    <div class="location-actions">
+        <button type="button" id="save-location">Guardar ubicación</button>
+        <button type="button" id="clear-location" style="background:#493027">Limpiar</button>
+    </div>
+    <div id="location-message" class="location-message"></div>
+</section>
+
+<div class="about">
+    <h2 id="about-title" style="color:#ff7043">¿Por qué la Tierra se parece a Marte?</h2>
+    <p id="about-text-1">
+        Aunque Marte es un planeta diferente a la Tierra, existen lugares
+        que comparten características sorprendentes. Algunos tienen terrenos
+        áridos, rocas rojizas, volcanes, cráteres, minerales y grandes
+        extensiones desérticas.
+    </p>
+    <p id="about-text-2">
+        Estos paisajes permiten estudiar ambientes extremos de nuestro planeta
+        y comprender mejor cómo podría ser la exploración de Marte.
+    </p>
+    <h3 id="about-quote" style="color:#ff9a70;margin-top:25px">
+        "Marte está más cerca de lo que imaginamos:
+        algunos de sus paisajes existen aquí, en nuestro propio planeta".
+    </h3>
+</div>
+
+<footer>
+    <p>🚀 ARES-X | Exploración de <span id="footer-destination-count">32</span> destinos</p>
+</footer>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">✖</span>
+        <div id="modal-info"></div>
+    </div>
+</div>
+
+<script>
+const places = [
+["Salar de Uyuni","Bolivia","Un enorme desierto de sal con un paisaje blanco que parece de otro planeta.","Salar de Uyuni Bolivia"],
+["Desierto de la Tatacoa","Colombia","Una región árida con formaciones rocosas rojizas y grises.","Tatacoa Desert Colombia"],
+["Valle de la Luna","Chile","Paisajes de arena, roca y montañas que recuerdan a la superficie marciana.","Valle de la Luna Chile"],
+["Painted Desert","Estados Unidos","Un desierto con montañas de diferentes colores y formaciones geológicas.","Painted Desert Arizona"],
+["Cráter Haughton","Canadá","Un cráter de impacto en una región ártica que sirve para estudiar ambientes extraterrestres.","Haughton crater Devon Island"],
+["Parque Nacional Talampaya","Argentina","Cañones rojizos y enormes paredes rocosas en un ambiente desértico.","Talampaya National Park Argentina"],
+["Capadocia","Turquía","Formaciones rocosas extrañas y paisajes volcánicos impresionantes.","Cappadocia Turkey"],
+["Desierto de Namib","Namibia","Uno de los desiertos más antiguos del mundo, con dunas gigantescas.","Namib desert Namibia"],
+["Desierto de Danakil","Etiopía","Un paisaje extremo con colores minerales y terrenos volcánicos.","Danakil Depression Ethiopia"],
+["Desierto de Gobi","Mongolia","Una región de grandes extensiones áridas, montañas y terrenos rocosos.","Gobi desert Mongolia"],
+["Parque Nacional Zhangye","China","Montañas de colores producidas por capas de minerales y sedimentos.","Zhangye Danxia China"],
+["Desierto de Lut","Irán","Un desierto con grandes formaciones rocosas y dunas impresionantes.","Lut desert Iran"],
+["Valles Secos de McMurdo","Antártida","Un territorio extremadamente seco y frío, considerado uno de los lugares terrestres más parecidos a Marte.","McMurdo Dry Valleys Antarctica"],
+["Isla de Lanzarote","España","Una isla volcánica con campos de lava y terrenos oscuros.","Lanzarote Canary Islands"],
+["Desierto de Mojave","Estados Unidos","Un desierto con montañas, rocas y extensos terrenos secos.","Mojave desert USA"],
+["Cráter Lonar","India","Un cráter formado por el impacto de un meteorito que contiene un lago.","Lonar crater India"],
+["Mauna Kea","Hawái","Una montaña volcánica con paisajes rocosos y condiciones extremas en sus zonas altas.","Mauna Kea Hawaii"],
+["Región de Pilbara","Australia","Una región antigua con formaciones rocosas y paisajes rojizos.","Pilbara Australia red landscape"],
+["Parque Nacional Rincón de la Vieja","Costa Rica","Una región volcánica con fumarolas, barro y terrenos de origen geotérmico.","Rincon de la Vieja Costa Rica"],
+["Parque Nacional Volcán Tenorio","Costa Rica","Un paisaje volcánico con rocas, bosques y aguas de colores intensos.","Tenorio volcano Costa Rica"],
+["Volcán Barva","Costa Rica","Un volcán con cráteres y terrenos de origen volcánico.","Barva volcano Costa Rica"],
+["Cerro Chirripó","Costa Rica","Montañas rocosas de gran altura con ambientes fríos y paisajes sorprendentes.","Cerro Chirripo Costa Rica"],
+["Parque Nacional Santa Rosa","Costa Rica","Una región con terrenos secos, bosques tropicales y formaciones volcánicas.","Santa Rosa National Park Costa Rica"],
+["Península de Santa Elena","Costa Rica","Una zona de bosque tropical seco con terrenos rocosos y paisajes áridos.","Santa Elena Peninsula Costa Rica"],
+["Cerro Pelado","Costa Rica","Una montaña con vegetación baja, rocas y vistas de apariencia desértica.","Cerro Pelado Costa Rica"],
+["Desierto de Atacama","Chile","Uno de los lugares más áridos del planeta, con paisajes similares a Marte.","Atacama desert Chile"],
+["Wadi Rum","Jordania","Un desierto rojizo con montañas de piedra y enormes extensiones de arena.","Wadi Rum Jordan"],
+["Volcán Irazú","Costa Rica","Un volcán con terrenos volcánicos, ceniza y cráteres impresionantes.","Irazu volcano Costa Rica"],
+["Río Tinto","España","Un río de tonos rojizos debido a minerales y microorganismos que viven en sus aguas.","Rio Tinto Spain"],
+["Volcán Poás","Costa Rica","Un volcán con un enorme cráter y actividad geotérmica.","Poas volcano Costa Rica"],
+["Parque Nacional Timanfaya","España","Un paisaje volcánico de lava y terrenos oscuros que recuerda a otro planeta.","Timanfaya National Park Lanzarote"],
+["Valle de la Muerte","Estados Unidos","Un paisaje desértico con montañas, dunas y temperaturas extremas.","Death Valley California"]
+];
+
+// Coordenadas aproximadas de los 32 lugares, en el mismo orden que la lista.
+const coordinates = [
+    [-20.1338,-67.4891], [3.234,-75.167], [-22.923,-68.297], [35.65,-111.78],
+    [75.37,-89.68], [-29.78,-67.85], [38.64,34.83], [-24.7,15.3],
+    [14.2417,40.3004], [42.59,103.43], [38.91,100.12], [30.6,58.3],
+    [-77.5,162], [29,-13.75], [35,-115.5], [19.98,76.51],
+    [19.82,-155.47], [-22.3,118.7], [10.83,-85.32], [10.72,-85.02],
+    [10.13,-84.11], [9.45,-83.49], [10.84,-85.62], [10.95,-85.77],
+    [10.45,-85], [-24.09,-69.9], [29.58,35.42], [9.98,-83.85],
+    [37.7,-6.55], [10.198,-84.233], [29,-13.75], [36.5,-117]
+];
+
+function googleMapsURL(index) {
+    const [lat, lng] = coordinates[index];
+    return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+}
+
+const analogDetails = [
+    ["Sus costras de sal, patrones poligonales y depósitos evaporíticos replican antiguos lagos secos y planicies ricas en cloruros y sulfatos marcianos.", "Calibrar espectrómetros orbitales y sensores de rovers para identificar minerales evaporíticos y estudiar microorganismos halófilos."],
+    ["Sus cárcavas erosionadas, suelos ricos en óxidos de hierro y baja cobertura vegetal imitan paisajes sedimentarios erosionados de Marte.", "Probar navegación autónoma de rovers en barrancos secos y entrenar cámaras para identificar estratos sedimentarios."],
+    ["Su hiperaridez, dunas, crestas salinas y rocas esculpidas por el viento reflejan la geomorfología eólica actual de Marte.", "Validar taladros para buscar biofirmas bajo la superficie y probar componentes contra polvo abrasivo."],
+    ["Sus colinas estratificadas de arcillas, lutitas y óxidos reproducen capas geológicas alteradas por agua como las del Monte Sharp.", "Entrenar visión artificial para diferenciar composiciones minerales por color y textura."],
+    ["Es un cráter de impacto en un desierto polar con permafrost, hielo subterráneo y brechas comparables a cráteres marcianos.", "Probar trajes espaciales, taladros de hielo, telecomunicaciones y operaciones en aislamiento extremo."],
+    ["Sus acantilados de arenisca roja, cañones y sedimentos fluviales antiguos replican valles y cañones marcianos.", "Probar radares de penetración terrestre y sistemas de mapeo 3D para escarpes inaccesibles."],
+    ["Sus tobas e ignimbritas volcánicas erosionadas muestran cómo pueden comportarse depósitos piroclásticos blandos en Marte.", "Estudiar la estabilidad de formaciones porosas para evaluar refugios subterráneos y cavidades naturales."],
+    ["Sus campos de dunas activas y megadunas esculpidas por el viento se parecen a los mares de arena marcianos.", "Modelar el transporte de arena y polvo y su efecto en paneles solares y rovers."],
+    ["Combina volcanismo, aguas hiperácidas, azufre, hierro y sales, como algunos ambientes hidrotermales del Marte primitivo.", "Investigar los límites de la vida microbiana en ambientes ácidos, salinos y calientes."],
+    ["Sus llanuras pedregosas, dunas frías y cambios térmicos imitan planicies áridas y ventosas de Marte.", "Probar baterías, electrónica de rovers y trajes espaciales ante cambios bruscos de temperatura."],
+    ["Sus areniscas estratificadas y óxidos de hierro reproducen secuencias sedimentarias expuestas por erosión en Marte.", "Calibrar espectrómetros de reflectancia para interpretar capas sedimentarias y su historia climática."],
+    ["Sus yardangs, temperaturas extremas y sequedad replican regiones erosionadas por vientos intensos en Marte.", "Interpretar imágenes satelitales de yardangs y probar materiales resistentes al sobrecalentamiento."],
+    ["Es uno de los ambientes terrestres más cercanos al Marte actual: hiperárido, frío, con permafrost seco y casi sin agua líquida.", "Probar instrumentos de detección de vida, taladros de hielo y sensores meteorológicos."],
+    ["Sus coladas basálticas y tubos de lava se parecen a cuevas volcánicas detectadas en los volcanes marcianos.", "Entrenar astronautas y robots para explorar tubos de lava como refugios contra la radiación."],
+    ["Combina abanicos aluviales, cráteres, lava y suelos polvorientos similares a sitios de aterrizaje de rovers.", "Validar movilidad, brazos robóticos, muestreo y navegación de vehículos de exploración."],
+    ["Es un cráter de impacto excavado en basalto, comparable a cráteres formados sobre la corteza basáltica de Marte.", "Estudiar alteración hidrotermal y formación de minerales arcillosos después de impactos."],
+    ["Su cima volcánica presenta ceniza basáltica oxidada, baja humedad y frío, semejantes al regolito marciano.", "Producir simulantes de suelo marciano y realizar simulaciones de hábitats aislados."],
+    ["Contiene rocas sedimentarias e hidrotermales de unos 3.500 millones de años, contemporáneas al Marte antiguo con agua líquida.", "Entrenar equipos de rover para identificar estromatolitos y biofirmas fósiles."],
+    ["Sus fumarolas, lodos y rocas volcánicas ofrecen un análogo de procesos hidrotermales y química extrema marciana.", "Probar sensores de gases, muestreo de suelos y detección de señales de habitabilidad."],
+    ["Sus rocas volcánicas y aguas minerales permiten comparar alteración química y circulación de fluidos en ambientes extremos.", "Ensayar robots acuáticos, sensores mineralógicos y protocolos de muestreo remoto."],
+    ["Sus cráteres y depósitos volcánicos sirven como referencia terrestre para relieves de impacto y volcanismo marciano.", "Probar cartografía de cráteres y navegación de rovers en terrenos irregulares."],
+    ["Sus terrenos rocosos de alta montaña y clima frío permiten estudiar superficies expuestas y austeras parecidas a Marte.", "Evaluar trajes, equipos de ascenso y navegación en baja temperatura y baja cobertura vegetal."],
+    ["Sus suelos secos y extensos permiten comparar erosión, polvo y cambios estacionales en ambientes áridos.", "Probar cámaras, sensores meteorológicos y técnicas de clasificación de terreno."],
+    ["Sus afloramientos rocosos antiguos y paisajes secos permiten estudiar erosión y superficies expuestas como las marcianas.", "Ensayar mapeo geológico, identificación de minerales y navegación visual."],
+    ["Sus crestas abiertas y vegetación escasa permiten estudiar erosión, viento y suelos expuestos en un ambiente terrestre extremo.", "Probar navegación de rovers, cámaras panorámicas y clasificación de obstáculos."],
+    ["Sus suelos hiperáridos contienen sales y minerales que recuerdan la química superficial seca y oxidante de Marte.", "Probar buscadores de vida y calibrar instrumentos para detectar moléculas orgánicas."],
+    ["Sus planicies de arena roja y monolitos erosionados reproducen visual y geológicamente llanuras rocosas marcianas.", "Probar navegación visual y desplazamiento sobre dunas mezcladas con afloramientos rocosos."],
+    ["Sus cráteres, ceniza y suelos volcánicos ofrecen una referencia costarricense para relieves de impacto y regolito.", "Calibrar cámaras, sensores de ceniza y sistemas de navegación en cráteres."],
+    ["Sus aguas ácidas y minerales de hierro forman jarosita y hematita, minerales relevantes encontrados en Marte.", "Estudiar microorganismos subterráneos y probar perforadoras de subsuelo."],
+    ["Sus campos de lava, conos de escoria y anomalías geotérmicas imitan volcanismo reciente marciano.", "Calibrar sensores infrarrojos y térmicos para detectar calor y actividad geotérmica."],
+    ["Sus abanicos aluviales, salares, dunas y calor extremo recuerdan la transición de antiguos lagos marcianos a desiertos.", "Probar navegación óptica, sistemas de aterrizaje y Terrain Relative Navigation."],
+    ["La ubicación aportada puede compararse con Marte según su clima, suelo, minerales, relieve y nivel de aridez.", "Registrar datos de campo, probar sensores, navegación de rover o técnicas de muestreo según las condiciones descritas."]
+];
+
+function conciseSummary(place) {
+    const normalizedName = place[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    if (normalizedName.includes("canon de liberia")) {
+        return "Cañón volcánico de Guanacaste con paredes de ignimbrita y toba, esculpidas por el agua y parecidas a antiguas gargantas marcianas.";
+    }
+    return place[2];
+}
+
+// Carga los lugares aportados por los usuarios desde el navegador.
+const savedLocations = JSON.parse(localStorage.getItem("ares-x-analog-locations") || "[]");
+savedLocations.forEach(location => {
+    places.push([location.name, location.country, location.summary || location.why || "", `${location.name} ${location.country}`, location.imageData || "", location.why || "", location.tests || ""]);
+    coordinates.push([location.lat, location.lng]);
+});
+
+const gallery = document.getElementById("gallery");
+const search = document.getElementById("search");
+const filter = document.getElementById("filter");
+let currentLanguage = "es";
+
+const languageText = {
+    es: {
+        hero: n => `${n} lugares increíbles de nuestro planeta que parecen sacados de Marte.`,
+        explore: n => `Explora los ${n} destinos`, subtitle: "Descubre los paisajes más sorprendentes de nuestro planeta.",
+        all: "Todos los lugares", cr: "Solo Costa Rica 🇨🇷", other: "Otros países 🌎", search: "🔎 Buscar lugar o país...",
+        addTitle: "Añadir una ubicación análoga a Marte", addDescription: "Registra un lugar de la Tierra que pueda servir para estudiar o simular condiciones marcianas.",
+        save: "Guardar ubicación", clear: "Limpiar", explorePlace: "Explorar destino →", map: "📍 Abrir ubicación exacta en Google Maps",
+        similarity: "Similitud exacta con Marte", nasa: "Aplicación práctica de la NASA", noResults: "No se encontraron lugares."
+    },
+    en: {
+        hero: n => `${n} amazing places on Earth that look like Mars.`,
+        explore: n => `Explore the ${n} destinations`, subtitle: "Discover the most surprising landscapes on our planet.",
+        all: "All places", cr: "Costa Rica only 🇨🇷", other: "Other countries 🌎", search: "🔎 Search place or country...",
+        addTitle: "Add a Mars-analog location", addDescription: "Register a place on Earth that can help study or simulate Martian conditions.",
+        save: "Save location", clear: "Clear", explorePlace: "Explore destination →", map: "📍 Open exact location in Google Maps",
+        similarity: "Exact similarity to Mars", nasa: "NASA practical application", noResults: "No places found."
+    }
+};
+
+// Traduce también el texto libre de los registros de usuarios.
+const originalTextNodes = new WeakMap();
+const translationCache = new Map();
+
+function pageTextNodes(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+            const parent = node.parentElement;
+            if (!parent || ["SCRIPT", "STYLE", "NOSCRIPT", "OPTION"].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+            return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+    });
+    const nodes = [];
+    let node;
+    while ((node = walker.nextNode())) nodes.push(node);
+    return nodes;
+}
+
+async function translateOne(text) {
+    const leading = text.match(/^\s*/)?.[0] || "";
+    const trailing = text.match(/\s*$/)?.[0] || "";
+    const core = text.trim();
+    if (!core) return text;
+    if (translationCache.has(core)) return leading + translationCache.get(core) + trailing;
+    try {
+        const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=en&dt=t&q=" + encodeURIComponent(core);
+        const response = await fetch(url);
+        const data = await response.json();
+        const result = (data[0] || []).map(part => part[0]).join("") || core;
+        translationCache.set(core, result);
+        return leading + result + trailing;
+    } catch (error) { return text; }
+}
+
+async function translatePage(root = document.body) {
+    const nodes = pageTextNodes(root);
+    await Promise.all(nodes.map(async node => {
+        if (!originalTextNodes.has(node)) originalTextNodes.set(node, node.nodeValue);
+        node.nodeValue = await translateOne(originalTextNodes.get(node));
+    }));
+}
+
+function restorePage(root = document.body) {
+    pageTextNodes(root).forEach(node => {
+        if (originalTextNodes.has(node)) node.nodeValue = originalTextNodes.get(node);
+    });
+}
+
+async function applyLanguage(language) {
+    currentLanguage = language;
+    const t = languageText[language];
+    document.getElementById("hero-description").innerHTML = language === "en"
+        ? `<span id="hero-destination-count">${places.length}</span> amazing places on Earth that look like Mars.`
+        : `<span id="hero-destination-count">${places.length}</span> lugares increíbles de nuestro planeta que parecen sacados de Marte.`;
+    document.getElementById("explore-title").innerHTML = language === "en"
+        ? `Explore the <span id="explore-destination-count">${places.length}</span> destinations`
+        : `Explora los <span id="explore-destination-count">${places.length}</span> destinos`;
+    document.getElementById("explore-subtitle").textContent = t.subtitle;
+    document.getElementById("search").placeholder = t.search;
+    document.getElementById("filter-all").textContent = t.all;
+    document.getElementById("filter-cr").textContent = t.cr;
+    document.getElementById("filter-other").textContent = t.other;
+    document.getElementById("add-title").textContent = t.addTitle;
+    document.getElementById("add-description").textContent = t.addDescription;
+    document.getElementById("save-location").textContent = t.save;
+    document.getElementById("clear-location").textContent = t.clear;
+    const placeholders = language === "en" ? {
+        "new-name": "Example: volcanic field", "new-country": "Example: Costa Rica", "new-lat": "Example: 10.1980", "new-lng": "Example: -84.2330",
+        "new-summary": "Example: A volcanic landscape of lava and dark terrain that looks like another planet.",
+        "new-why": "Describe the climate, soil, rocks, minerals, craters or volcanism...",
+        "new-tests": "Example: rover, spacesuit, drilling or microbial-life tests..."
+    } : {
+        "new-name": "Ejemplo: Campo volcánico", "new-country": "Ejemplo: Costa Rica", "new-lat": "Ejemplo: 10.1980", "new-lng": "Ejemplo: -84.2330",
+        "new-summary": "Ejemplo: Un paisaje volcánico de lava y terrenos oscuros que recuerda a otro planeta.",
+        "new-why": "Describe el clima, suelo, rocas, minerales, cráteres o volcanismo...",
+        "new-tests": "Ejemplo: pruebas de rover, trajes espaciales, perforación o vida microbiana..."
+    };
+    Object.entries(placeholders).forEach(([id, value]) => document.getElementById(id).placeholder = value);
+    document.getElementById("about-title").textContent = language === "en" ? "Why does Earth look like Mars?" : "¿Por qué la Tierra se parece a Marte?";
+    render();
+    if (language === "en") await translatePage(document.body);
+    else restorePage(document.body);
+}
+
+async function loadSpecificImage(searchText, img, title) {
+    const api = "https://commons.wikimedia.org/w/api.php?action=query&origin=*&format=json" +
+        "&generator=search&gsrnamespace=6&gsrlimit=10&gsrsearch=" + encodeURIComponent(searchText) +
+        "&prop=imageinfo&iiprop=url|mime&iiurlwidth=900";
+    try {
+        const response = await fetch(api);
+        const data = await response.json();
+        const pages = Object.values(data.query?.pages || {}).sort((a, b) => (a.index || 0) - (b.index || 0));
+        const imagePage = pages.find(page => page.imageinfo?.[0]?.thumburl || page.imageinfo?.[0]?.url);
+        const imageInfo = imagePage?.imageinfo?.[0];
+        if (imageInfo) {
+            img.src = imageInfo.thumburl || imageInfo.url;
+            return;
+        }
+    } catch (error) {}
+    img.src = "https://placehold.co/700x450/38251e/ffad80?text=" + encodeURIComponent(title);
+}
+
+function render() {
+    const destinationCount = places.length;
+    document.getElementById("hero-destination-count").textContent = destinationCount;
+    document.getElementById("explore-destination-count").textContent = destinationCount;
+    document.getElementById("footer-destination-count").textContent = destinationCount;
+    const term = search.value.toLowerCase();
+    const selected = filter.value;
+
+    const results = places.filter(p => {
+        const matches = p[0].toLowerCase().includes(term) ||
+                        p[1].toLowerCase().includes(term);
+
+        const country = selected === "all" ||
+            (selected === "Costa Rica" && p[1] === "Costa Rica") ||
+            (selected === "Otros" && p[1] !== "Costa Rica");
+
+        return matches && country;
+    });
+
+    gallery.innerHTML = "";
+
+    if (!results.length) {
+        gallery.innerHTML = `<div class="empty">${languageText[currentLanguage].noResults}</div>`;
+        return;
+    }
+
+    results.forEach(place => {
+        const index = places.indexOf(place);
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = "https://placehold.co/700x450/38251e/ffad80?text=" + encodeURIComponent(place[0]);
+        img.alt = place[0];
+        img.loading = "lazy";
+
+        // Búsqueda de imágenes reales específicas del destino.
+        if (place[4]) img.src = place[4];
+        else loadSpecificImage(place[3], img, place[0]);
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const number = document.createElement("span");
+        number.className = "number";
+        number.textContent = `DESTINO #${String(index + 1).padStart(2,"0")}`;
+
+        const title = document.createElement("h3");
+        title.textContent = place[0];
+
+        const country = document.createElement("div");
+        country.className = "country";
+        country.textContent = "📍 " + place[1];
+
+        const description = document.createElement("p");
+        description.textContent = conciseSummary(place);
+
+        const mapLink = document.createElement("a");
+        mapLink.href = googleMapsURL(index);
+        mapLink.target = "_blank";
+        mapLink.rel = "noopener";
+        mapLink.textContent = `${languageText[currentLanguage].map} (${coordinates[index][0]}, ${coordinates[index][1]})`;
+        mapLink.style.display = "block";
+        mapLink.style.marginTop = "12px";
+        mapLink.style.color = "#ffad80";
+        mapLink.style.fontSize = "13px";
+        mapLink.style.fontWeight = "bold";
+
+        const button = document.createElement("button");
+        button.textContent = languageText[currentLanguage].explorePlace;
+        button.addEventListener("click", () => openModal(place, img.src));
+
+        content.append(number, title, country, description, mapLink, button);
+        card.append(img, content);
+        gallery.appendChild(card);
+    });
+    if (currentLanguage === "en") translatePage(gallery);
+}
+
+function openModal(place, image) {
+    document.getElementById("modal-info").innerHTML = "";
+
+    const container = document.getElementById("modal-info");
+    const img = document.createElement("img");
+    img.src = image;
+    img.alt = place[0];
+
+    const title = document.createElement("h2");
+    title.textContent = place[0];
+    title.style.color = "#ff7043";
+
+    const country = document.createElement("p");
+    country.textContent = "📍 " + place[1];
+    country.style.margin = "12px 0";
+
+    const index = places.indexOf(place);
+    const normalizedName = place[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const isLiberiaCanyon = normalizedName.includes("canon de liberia");
+    const userDetail = index >= 32 && (place[5] || place[6]) ? [conciseSummary(place), place[5], place[6]] : null;
+    const customDetail = isLiberiaCanyon ? [
+        "Cañón volcánico de Guanacaste con paredes de ignimbrita y toba, esculpidas por el agua y parecidas a antiguas gargantas marcianas.",
+        "La actividad volcánica y la erosión hídrica formaron paredes estratificadas de ignimbrita y toba, con silicatos y relieves comparables a antiguos cañones de Marte.",
+        "Probar la tracción de rovers en polvo y pendientes, y calibrar sensores láser para identificar minerales volcánicos y posibles biofirmas en roca seca."
+    ] : userDetail;
+    const detail = customDetail || analogDetails[index] || analogDetails[analogDetails.length - 1];
+
+    const description = document.createElement("p");
+    description.textContent = conciseSummary(place);
+    description.style.lineHeight = "1.7";
+    const similarityBox = document.createElement("section");
+    similarityBox.className = "analog-box";
+    similarityBox.innerHTML = `<h3>${languageText[currentLanguage].similarity}</h3>`;
+    const similarityText = document.createElement("p");
+    similarityText.textContent = customDetail ? detail[1] : detail[0];
+    similarityBox.appendChild(similarityText);
+
+    const nasaBox = document.createElement("section");
+    nasaBox.className = "analog-box";
+    nasaBox.innerHTML = `<h3>${languageText[currentLanguage].nasa}</h3>`;
+    const nasaText = document.createElement("p");
+    nasaText.textContent = customDetail ? detail[2] : detail[1];
+    nasaBox.appendChild(nasaText);
+
+    const mapLink = document.createElement("a");
+    mapLink.href = googleMapsURL(index);
+    mapLink.target = "_blank";
+    mapLink.rel = "noopener";
+    mapLink.textContent = `${languageText[currentLanguage].map} (${coordinates[index][0]}, ${coordinates[index][1]})`;
+    mapLink.style.display = "inline-block";
+    mapLink.style.marginTop = "15px";
+    mapLink.style.color = "#ffad80";
+    mapLink.style.fontWeight = "bold";
+
+    const mapFrame = document.createElement("iframe");
+    const [mapLat, mapLng] = coordinates[index];
+    mapFrame.className = "embedded-map";
+    mapFrame.src = `https://www.google.com/maps?q=${mapLat},${mapLng}&z=12&output=embed`;
+    mapFrame.title = `Mapa de ${place[0]}`;
+    mapFrame.loading = "lazy";
+    mapFrame.referrerPolicy = "no-referrer-when-downgrade";
+
+    container.append(img, title, country, description, similarityBox, nasaBox, mapFrame);
+    if (currentLanguage === "en") translatePage(container);
+    document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+document.getElementById("modal").addEventListener("click", e => {
+    if (e.target.id === "modal") closeModal();
+});
+
+search.addEventListener("input", render);
+filter.addEventListener("change", render);
+
+function clearLocationForm() {
+    ["new-name", "new-country", "new-lat", "new-lng", "new-summary", "new-why", "new-tests"].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+    document.getElementById("new-image-file").value = "";
+    document.getElementById("location-message").textContent = "";
+}
+
+document.getElementById("save-location").addEventListener("click", async () => {
+    const name = document.getElementById("new-name").value.trim();
+    const country = document.getElementById("new-country").value.trim();
+    const lat = Number(document.getElementById("new-lat").value.trim().replace(",", "."));
+    const lng = Number(document.getElementById("new-lng").value.trim().replace(",", "."));
+    const summary = document.getElementById("new-summary").value.trim();
+    const why = document.getElementById("new-why").value.trim();
+    const tests = document.getElementById("new-tests").value.trim();
+    const imageFile = document.getElementById("new-image-file").files[0];
+    const message = document.getElementById("location-message");
+
+    if (!name || !country || !Number.isFinite(lat) || !Number.isFinite(lng) || !summary || !why || !tests) {
+        message.style.color = "#ffad80";
+        message.textContent = "Completa nombre, país, coordenadas, semejanza y pruebas análogas.";
+        return;
+    }
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+        message.style.color = "#ffad80";
+        message.textContent = "La latitud debe estar entre -90 y 90 y la longitud entre -180 y 180.";
+        return;
+    }
+
+    if (imageFile && !imageFile.type.startsWith("image/")) {
+        message.style.color = "#ffad80";
+        message.textContent = "El archivo seleccionado debe ser una imagen.";
+        return;
+    }
+    if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+        message.style.color = "#ffad80";
+        message.textContent = "La imagen debe pesar menos de 5 MB.";
+        return;
+    }
+    let imageData = "";
+    if (imageFile) {
+        imageData = await new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => resolve("");
+            reader.readAsDataURL(imageFile);
+        });
+    }
+    const location = { name, country, lat, lng, summary, why, tests, imageData };
+    savedLocations.push(location);
+    localStorage.setItem("ares-x-analog-locations", JSON.stringify(savedLocations));
+    places.push([name, country, summary, `${name} ${country}`, imageData, why, tests]);
+    coordinates.push([lat, lng]);
+    render();
+    clearLocationForm();
+    message.style.color = "#8ee6a8";
+    message.textContent = "Ubicación guardada. Ya aparece en la galería y tiene enlace a Google Maps.";
+});
+
+document.getElementById("clear-location").addEventListener("click", clearLocationForm);
+document.getElementById("language-select").addEventListener("change", e => applyLanguage(e.target.value));
+
+render();
+</script>
+
+</body>
+</html>
